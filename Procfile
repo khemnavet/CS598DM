@@ -1,0 +1,1 @@
+web: gunicorn task7_app:app
