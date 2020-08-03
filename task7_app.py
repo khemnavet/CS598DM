@@ -6,7 +6,7 @@ import task7_classes
 import task7_constant
 
 app = flask.Flask(__name__)
-app.config["DEBUG"] = True
+app.config["DEBUG"] = False
 CORS(app)
 model = task7_classes.Model('yelp_dataset/word2vecmodel2')
 
