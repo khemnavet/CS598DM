@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <style>
+      body {
+        padding-top: 65px;
+      }
+
+      .slide {
+        margin-top:1rem;
+      }
+    </style>
+    <title>Word2Vec Data Explorer</title>
+  </head>
+  <body>
+    <div class="container">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <p class="navbar-brand">Word2Vec</p>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active"><a id="menu1" class="nav-link" href="#" data-slide="slide1">Home <span class="sr-only">(current)</span></a></li>
+            <li class="nav-item"><a id="menu2" class="nav-link" href="#" data-slide="slide2">Auto Complete</a></li>
+            <li class="nav-item"><a id="menu3" class="nav-link" href="#" data-slide="slide3">Close Words</a></li>
+            <li class="nav-item"><a id="menu4" class="nav-link" href="#" data-slide="slide4">Explore</a></li>
+          </ul>
+        </div>
+      </nav>
+      <div id="slide1" class="slide">
+      <div class="jumbotron">
+        <h1 class="display-4">Word2Vec Data Explorer</h1>
+        <p class="lead">This application is used to explore a Word2Vec model. </p>
+        <hr class="my-4">
+        <p>Use the menu options above to explore the data in the model</p>
+        <ul>
+          <li>The "Auto Complete" option accepts a word and displays the words in the model that start or end with that word. The number of words returned can be adjusted.</li>
+          <li>The "Close Words" option accepts two words and displays the words that are more similar to the first word than they are similar to the second word</li>
+          <li>The "Explore" option displays the words that are similar to the query. Multiple words can be used in the query. Use "AND" to join the words and "AND NOT" exclude words. For example pasta AND gnocchi AND NOT pizza.</li>
+        </ul>
+      </div>
+     </div>
+
+     <div id="slide2" class="slide d-none">
+       <h2>Auto Complete</h2>
+       <form id="ac_form" class="needs-validation" novalidate>
+         <div class="form-group">
+           <label for="ac_q">Word</label>
+           <input type="text" name="ac_q" id="ac_q" class="form-control" value="" required>
+           <div class="invalid-feedback">Please enter a word</div>
+         </div>
+         <div class="form-group">
+           <label for="ac_limit">Number of words to display</label>
+           <input type="text" name="ac_limit" id="ac_limit" class="form-control" value="30" required>
+           <div class="invalid-feedback">Please enter the number of words to display</div>
+         </div>
+         <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="ac_ps" id="ac_ps1" value="0" checked="checked">
+          <label class="form-check-label" for="ac_ps1">Show words starting with</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="ac_ps" id="ac_ps2" value="1">
+          <label class="form-check-label" for="ac_ps2">Show words ending with</label>
+        </div>
+        <button id="ac_submit" class="btn btn-primary" type="submit">Show Words</button>
+       </form>
+       <div id="ac_results" class="mt-3"></div>
+     </div>
+
+     <div id="slide3" class="slide d-none">
+       <h2>Close Words</h2>
+       <form id="cw_form" class="needs-validation" novalidate>
+        <p class="form-control-plaintext">Show words that are close to</p>
+        <div class="form-group">
+          <label for="cw_w1">Word (can enter a query of the form word1 AND word2 etc)</label>
+          <input type="text" name="cw_w1" id="cw_w1" class="form-control" value="" required>
+          <div class="invalid-feedback">Please enter a word</div>
+        </div>
+        <p class="form-control-plaintext">but not close to</p>
+        <div class="form-group">
+          <label for="cw_w2">Word</label>
+          <input type="text" name="cw_w2" id="cw_w2" class="form-control" value="" required>
+          <div class="invalid-feedback">Please enter a word</div>
+        </div>
+        <div class="form-group">
+          <label for="cw_limit">Number of words to display</label>
+          <input type="text" name="cw_limit" id="cw_limit" class="form-control" value="30" required>
+          <div class="invalid-feedback">Please enter the number of words to display</div>
+        </div>
+       <button id="cw_submit" class="btn btn-primary" type="submit">Show Words</button>
+      </form>
+      <div id="cw_results" class="mt-3"></div>
+     </div>
+
+     <div id="slide4" class="slide d-none">
+      <h2>Explore</h2>
+      <form id="ex_form" class="needs-validation" novalidate>
+        <p class="form-control-plaintext">Show words that are similar to</p>
+        <div class="form-group">
+          <label for="ex_q">Query</label>
+          <input type="text" name="ex_q" id="ex_q" class="form-control" value="" required>
+          <div class="invalid-feedback">Please enter a query</div>
+        </div>
+        <div class="form-group">
+          <label for="ex_limit">Number of words to display</label>
+          <input type="text" name="ex_limit" id="ex_limit" class="form-control" value="1000" required>
+          <div class="invalid-feedback">Please enter the number of words to display</div>
+        </div>
+        <p class="form-control-plaintext">Cluster Results?</p>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="ex_cluster" id="ex_cluster1" value="0" checked="checked">
+          <label class="form-check-label" for="ex_cluster1">No</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="ex_cluster" id="ex_cluster2" value="1">
+          <label class="form-check-label" for="ex_cluster2">Yes</label>
+        </div>
+        <div class="form-group">
+          <label for="ex_nc">Number of clusters</label>
+          <input type="text" name="ex_nc" id="ex_nc" class="form-control" value="30" required>
+          <div class="invalid-feedback">Please enter the number of custers</div>
+        </div>
+       <button id="ex_submit" class="btn btn-primary" type="submit">Show Words</button>
+      </form>
+      <div id="ex_results" class="mt-3"></div>
+      <div id="ex_chart" class="mt-3"></div>
+    </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@5.16.0/dist/d3.min.js" integrity="sha256-Xb6SSzhH3wEPC4Vy3W70Lqh9Y3Du/3KxPqI2JHQSpTw=" crossorigin="anonymous"></script>
+    <script>
+      var url = 'https://khem.pythonanywhere.com/';
+      //var url = 'http://127.0.0.1:5000/';
+
+      function validateForm(formId) {
+        var isValid = $('#'+formId)[0].checkValidity();
+        $('#'+formId).addClass('was-validated');
+        return isValid;
+      }
+
+      function loadSpinner(formId, buttonId, buttonText) {
+        $('#'+formId).removeClass('was-validated');
+        $('#'+buttonId).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> '+buttonText);
+        $('#'+buttonId).prop('disabled',true);
+      }
+
+      function enableButton(buttonId, buttonText) {
+        $('#'+buttonId).html(buttonText);
+        $('#'+buttonId).prop('disabled',false);
+      }
+
+      $(document).ready(function() {
+        $('.nav-link').on('click', function() {
+          if (!$(this).parent().hasClass('active')) {
+            var slide = $(this).attr('data-slide');
+            //show the div for this menu and hide the others
+            $('.slide').addClass('d-none');
+            $('.slide').removeClass('d-block');
+            $('.nav-item').removeClass('active');
+            $('#'+slide).removeClass('d-none');
+            $('#'+slide).addClass('d-block')
+            $(this).parent().addClass('active');
+          }
+          return false;
+        });
+
+        $('#ac_submit').on('click', function() {
+          var isValid = validateForm('ac_form');
+          if (isValid) {
+            //go ahead and submit
+            loadSpinner('ac_form', 'ac_submit', 'Show Words');
+            //clear results
+            $('#ac_results').html('');
+            var ps = 0;
+            if ($('#ac_ps2').prop('checked')) {
+              ps = 1;
+            }
+            //ajax call
+            $.ajax({
+              url: url+'/api/auto_complete?q='+$('#ac_q').val()+'&limit='+$('#ac_limit').val()+'&ps='+ps,
+              method: 'GET',
+              dataType: 'json',
+              success: function(data) {
+                if (data['error']) {
+                  $('#ac_results').html('<div class="alert alert-danger"><p>'+data['result']+'</p></div>');
+                }
+                else {
+                  var htmlstr = '<table class="table table-striped"><thead><tr><th>#</th><th>Word</th><th>Count</th></tr></thead><tbody>';
+                  var i = 1;
+                  for (var j = 0; j < data['result'].length; j++) {
+                    htmlstr = htmlstr+'<tr><td>'+i+'</td><td>'+data['result'][j].word+'</td><td>'+data['result'][j].count+'</td></tr>';
+                    i++;
+                  }
+                  htmlstr = htmlstr + '</tbody></table>';
+                  $('#ac_results').html(htmlstr);
+                }
+                enableButton('ac_submit', 'Show Words');
+              }
+            });
+          }
+          
+          return false;
+        });
+
+        $('#cw_submit').on('click', function() {
+          var isValid = validateForm('cw_form');
+          if (isValid) {
+            //submit form
+            loadSpinner('cw_form', 'cw_submit', 'Show Words');
+            //clear results
+            $('#cw_results').html('');
+            //ajax call
+            $.ajax({
+              url: url+'/api/close_words?w1='+$('#cw_w1').val()+'&w2='+$('#cw_w2').val()+'&limit='+$('#cw_limit').val(),
+              method: 'GET',
+              dataType: 'json',
+              success: function(data) {
+                if (data['error']) {
+                  $('#cw_results').html('<div class="alert alert-danger"><p>'+data['result']+'</p></div>');
+                }
+                else {
+                  var htmlstr = '<table class="table table-striped"><thead><tr><th>#</th><th>Word</th></tr></thead><tbody>';
+                  var i = 1;
+                  if (data['result']['word'].length > 0) {
+                    htmlstr = htmlstr + '<tr><td colspan="2">Showing words close to <strong>'+data['result']['word']+'</strong></td></tr>';
+                  }
+                  for (var j = 0; j < data['result']['words'].length; j++) {
+                    htmlstr = htmlstr+'<tr><td>'+i+'</td><td>'+data['result']['words'][j]+'</td></tr>';
+                    i++;
+                  }
+                  htmlstr = htmlstr + '</tbody></table>';
+                  $('#cw_results').html(htmlstr);
+                }
+                enableButton('cw_submit', 'Show Words');
+              }
+            });
+          }
+          return false;
+        });
+
+        $('#ex_submit').on('click', function() {
+          var isValid = validateForm('ex_form');
+          if (isValid) {
+            //submit form
+            loadSpinner('ex_form', 'ex_submit', 'Show Words');
+            //clear results
+            $('#ex_results').html('');
+            $('#ex_chart').html('');
+            var cluster = 0;
+            if ($('#ex_cluster2').prop('checked')) {
+              cluster = 1;
+            }
+            //ajax call
+            $.ajax({
+              url: url+'/api/explore?q='+$('#ex_q').val()+'&limit='+$('#ex_limit').val()+'&cluster='+cluster+'&nc='+$('#ex_nc').val(),
+              method: 'GET',
+              dataType: 'json',
+              success: function(data) {
+                if (data['error']) {
+                  $('#ex_results').html('<div class="alert alert-danger"><p>'+data['result']+'</p></div>');
+                }
+                else {
+                  var htmlstr = '<div class="row"><div class="col">Words Similar to Query:</div><div class="w-100"></div><div id="ex_label_list" class="col text-truncate">';
+                  var sep = '';
+                  for (var j = 0; j < data['result']['labels'].length; j++) {
+                    htmlstr = htmlstr + sep + data['result']['labels'][j];
+                    sep = ', ';
+                  }
+                  htmlstr = htmlstr + '</div><div class="w-100"></div><div class="col"><a id="ex_show_more" href="#" data-state="0">Expand</a>. Showing ' + data['result']['query_size'] + ' of '+ data['result']['vocab_size'] + ' words.</div>';
+                  
+                  $('#ex_results').html(htmlstr);
+
+                  $('#ex_show_more').on('click', function() {
+                    if ($(this).attr('data-state') == '0') {
+                      $('#ex_label_list').removeClass('text-truncate');
+                      $(this).html('Collapse');
+                      $(this).attr('data-state', 1);
+                    }
+                    else {
+                      $('#ex_label_list').addClass('text-truncate');
+                      $(this).html('Expand');
+                      $(this).attr('data-state', 0);
+                    }
+                    return false;
+                  }); 
+
+                  var margin = {top: 20, right: 20, bottom: 50, left: 60},
+                      width = 840 - margin.left - margin.right,
+                      height = 370 - margin.top - margin.bottom;
+
+                  var x = d3.scaleLinear().range([0, width]);
+                  var y = d3.scaleLinear().range([height, 0]);
+                  var color = d3.scaleOrdinal(d3.schemeCategory10);
+
+                  var svg = d3.select("#ex_chart").append("svg")
+                      .attr("width", width + margin.left + margin.right)
+                      .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                  
+                  clusterData = data['result']['cluster_data'];
+                  centroids = data['result']['centroids'];
+                  x.domain(d3.extent(clusterData, function(d) { return d.x; })).nice();
+                  y.domain(d3.extent(clusterData, function(d) { return d.y; })).nice();
+
+                  var gdots = svg.selectAll(".data.dot")
+                      .data(clusterData)
+                    .enter().append("g");
+                  
+                  gdots.append("circle")
+                    .attr("class", "data dot")
+                    .attr("r", 3.5)
+                    .attr("cx", function(d) { return x(d.x); })
+                    .attr("cy", function(d) { return y(d.y); })
+                    .style("fill", function(d) { return color(d.label); });
+
+                  var symbolGenerator = d3.symbol().size(100);
+
+                  var gdots1 = svg.selectAll(".centroid.dot")
+                      .data(centroids)
+                    .enter().append("g");
+                  gdots1.append("path")
+                    .attr("class", "centroid dot")
+                    .attr("d", function(d) {symbolGenerator.type(d3['symbolCross']); return symbolGenerator();})
+                    .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; })
+                    .style("fill", function(d) { return color("red"); });
+                  gdots1.append("text").text(function(d) { return d.word; })
+                    .attr("x", function(d) {return x(d.x); })
+                    .attr("y", function(d) {return y(d.y); })
+                    .style("font-weight", "bold");
+                }
+                enableButton('ex_submit', 'Show Words');
+              }
+            });
+          }
+          return false;
+        });
+      });
+    </script>
+  </body>
+</html>
