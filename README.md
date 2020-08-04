@@ -1,5 +1,4 @@
-# CS598 Data Mining Capstone
-## Application System
+# Query Word2Vec model
 
 A Python application to query a Word2Vec model.
 
